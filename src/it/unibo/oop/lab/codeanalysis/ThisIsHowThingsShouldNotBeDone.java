@@ -10,12 +10,12 @@ import java.util.Collection;
  * This code triggers static code analyzers. You should use it to see how things
  * SHOULD NOT be done.
  *
- * @author Danilo Pianini
- * @version 1.2
  *
  */
-public class ThisIsHowThingsShouldNotBeDone {
 
+public final class ThisIsHowThingsShouldNotBeDone {
+    private ThisIsHowThingsShouldNotBeDone() {
+    }
     /*
      * PMD complains:
      * 
@@ -43,13 +43,14 @@ public class ThisIsHowThingsShouldNotBeDone {
      * 
      * Missing Javadoc
      */
-    public static void main(String[] a) {
+    public static void main(final String[] a) {
+        final int magic = 43;
         /*
          * PMD Complains:
          * 
          * this variable should be final!
          */
-        Collection<Object> c = new ArrayList<>();
+        final Collection<Object> c = new ArrayList<>();
         /*
          * PMD complains:
          * 
@@ -61,14 +62,14 @@ public class ThisIsHowThingsShouldNotBeDone {
          * 
          * What does it mean "43"? It's a magic number!
          */
-        for (int i = 0; i < 43; i++)
+        for (int i = 0; i < magic; i++) {
             c.add(new Object());
+        }
         /*
          * FindBugs complains
          * 
          * Slow: use clear() instead!
          */
-        c.removeAll(c);
+        c.clear();
     }
-
 }
