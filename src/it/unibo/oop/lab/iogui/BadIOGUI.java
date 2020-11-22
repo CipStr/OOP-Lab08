@@ -5,10 +5,16 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,12 +44,30 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        final JPanel panel = new JPanel();
+        final JPanel canvasBorder = new JPanel();
+        final JButton read = new JButton("Read");
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        canvasBorder.setLayout(new BorderLayout());
+        canvas.add(panel, BorderLayout.CENTER);
+        panel.add(canvasBorder);
+        canvasBorder.add(write, BorderLayout.WEST);
+        canvasBorder.add(read, BorderLayout.EAST);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
          */
+        read.addActionListener(l -> {
+            try {
+                final List<String> lines = Files.readAllLines(new File(PATH).toPath());
+                for (final String line: lines) {
+                    System.out.println("Read Number : " + line);
+                }
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        });
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -76,6 +100,7 @@ public class BadIOGUI {
         final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
+        frame.pack();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
