@@ -1,28 +1,53 @@
 package it.unibo.oop.lab.mvc;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
+
 /**
- * A controller that prints strings and has memory of the strings it printed.
+ * 
  */
-public interface Controller {
+public class Controller {
 
     /*
-     * This interface must model a simple controller responsible of I/O access. It
-     * considers only the standard output, and it is able to print on it.
+     * This class must implement a simple controller responsible of I/O access. It
+     * considers a single file at a time, and it is able to serialize objects in it.
      * 
-     * Write the interface and implement it in a class in such a way that it
-     * includes:
+     * Implement this class with:
      * 
-     * 1) A method for setting the next string to print. Null values are not
-     * acceptable, and an exception should be produced
+     * 1) A method for setting a File as current file
      * 
-     * 2) A method for getting the next string to print
+     * 2) A method for getting the current File
      * 
-     * 3) A method for getting the history of the printed strings (in form of a List
-     * of Strings)
+     * 3) A method for getting the path (in form of String) of the current File
      * 
-     * 4) A method that prints the current string. If the current string is unset,
-     * an IllegalStateException should be thrown
+     * 4) A method that gets a String as input and saves its content on the current
+     * file. This method may throw an IOException.
      * 
+     * 5) By default, the current file is "output.txt" inside the user home folder.
+     * A String representing the local user home folder can be accessed using
+     * System.getProperty("user.home"). The separator symbol (/ on *nix, \ on
+     * Windows) can be obtained as String through the method
+     * System.getProperty("file.separator"). The combined use of those methods leads
+     * to a software that runs correctly on every platform.
      */
+    private File file;
+    private String path = (System.getProperty("user.home") + System.getProperty("file.separator")) +"output" + ".txt";
+    public final void setFile ( final File file )  {
+        this.file=file;
+        this.path=file.getPath();
+    }
+    public File getFile() {
+        return file.getAbsoluteFile();
+    }
+    public String getPath() {
+        return file.getPath();
+    }
+    public void addInputToFile(String s) throws FileNotFoundException {
+        PrintStream ps = new PrintStream(path);
+        ps.print(s);
+        ps.close();
+    }
 
 }
